@@ -1,82 +1,84 @@
 
-const CACHE_NAME = "story-za-dully-v3";
+const CACHE_NAME = "dully-story-app-pwa-v1";
+const CACHE_PREFIX = "dully-story-app-pwa-";
+const BASE = "/dully-story-app-pwa/";
 
 const FILES_TO_CACHE = [
-  "/story-za-dully-pwa/",
-  "/story-za-dully-pwa/index.html",
-  "/story-za-dully-pwa/manifest.json",
-  "/story-za-dully-pwa/icons/icon-192.png",
-  "/story-za-dully-pwa/icons/icon-512.png"
+  BASE,
+  BASE + "index.html",
+  BASE + "manifest.json",
+  BASE + "icons/icon-192.png",
+  BASE + "icons/icon-512.png"
 ];
 
 /* INSTALL */
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(FILES_TO_CACHE);
-    })
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(FILES_TO_CACHE))
+      .then(() => self.skipWaiting())
   );
-
-  self.skipWaiting();
 });
 
 /* ACTIVATE */
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    caches.keys()
+      .then((names) => Promise.all(
+        names
+          .filter(name =>
+            name.startsWith(CACHE_PREFIX) &&
+            name !== CACHE_NAME
+          )
+          .map(name => caches.delete(name))
+      ))
+      .then(() => self.clients.claim())
   );
-
-  self.clients.claim();
 });
 
 /* FETCH */
 self.addEventListener("fetch", (event) => {
-
   const request = event.request;
 
-  // Hifadhi GET requests pekee
   if (request.method !== "GET") {
     return;
   }
 
-  // Usihifadhi maombi ya Blogger au tovuti nyingine
-  const requestURL = new URL(request.url);
+  const url = new URL(request.url);
 
-  if (requestURL.origin !== self.location.origin) {
+  /* IGNORE EXTERNAL WEBSITES */
+  if (
+    url.origin !== self.location.origin ||
+    !url.pathname.startsWith(BASE)
+  ) {
     return;
   }
 
   event.respondWith(
     fetch(request)
       .then((response) => {
+        if (response && response.ok) {
+          const copy = response.clone();
 
-        if (response && response.status === 200) {
-
-          const responseClone = response.clone();
-
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(request, responseClone);
-          });
-
+          caches.open(CACHE_NAME)
+            .then(cache => cache.put(request, copy));
         }
 
         return response;
-
       })
       .catch(async () => {
+        const cached = await caches.match(request);
 
-        const cachedResponse = await caches.match(request);
+        if (cached) {
+          return cached;
+        }
 
-        if (cachedResponse) {
-          return cachedResponse;
+        if (request.mode === "navigate") {
+          const fallback = await caches.match(BASE);
+
+          if (fallback) {
+            return fallback;
+          }
         }
 
         return new Response(
@@ -88,8 +90,7 @@ self.addEventListener("fetch", (event) => {
             }
           }
         );
-
       })
   );
-
 });
+        
