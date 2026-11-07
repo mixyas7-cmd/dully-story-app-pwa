@@ -4,23 +4,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#050816">
 
   <title>Dully Story App</title>
 
-  <link rel="manifest" href="./manifest.json">
-  <link rel="icon" type="image/png" sizes="512x512"
-        href="./icons/icon-512.png">
-  <link rel="apple-touch-icon" href="./icons/icon-512.png">
+  <meta name="description"
+    content="Karibu Dully Story App. Soma simulizi na hadithi mbalimbali.">
+
+  <meta name="theme-color" content="#050816">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Dully Story">
+
+  <link rel="manifest"
+    href="/dully-story-app-pwa/manifest.json">
+
+  <link rel="icon" type="image/png"
+    href="/dully-story-app-pwa/icons/icon-192.png">
 
   <style>
     * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
 
     html, body {
-      margin: 0;
-      padding: 0;
       width: 100%;
       height: 100%;
       overflow: hidden;
@@ -28,395 +38,242 @@
       font-family: Arial, sans-serif;
     }
 
-    /* BLOGGER IFRAME */
     #blog {
-      width: 100%;
-      height: 100%;
-      height: 100dvh;
-      display: block;
-      border: none;
-      background: #050816;
-    }
-
-    /* INSTALL PAGE */
-    #installPage {
       position: fixed;
       inset: 0;
-      z-index: 9999;
-      background: #050816;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 25px;
-      text-align: center;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
     }
 
-    #installContent {
-      width: 100%;
-      max-width: 360px;
+    #installScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
-    }
-
-    #installLogo {
-      width: 110px;
-      height: 110px;
-      object-fit: cover;
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.25);
-      margin-bottom: 28px;
-    }
-
-    #installTitle {
+      padding: 25px;
+      text-align: center;
       color: #fff;
-      font-size: 19px;
-      font-weight: bold;
-      letter-spacing: 1px;
-      margin: 0 0 10px;
+      background:
+        radial-gradient(circle at top, #18264b 0%, transparent 45%),
+        #050816;
+      transition: opacity .5s ease, visibility .5s ease;
     }
 
-    #installDescription {
-      color: #b8bdca;
-      font-size: 13px;
-      line-height: 1.6;
-      margin: 0 0 28px;
-      max-width: 290px;
-    }
-
-    /* INSTALL BUTTON */
-    #installButton {
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-      max-width: 280px;
-      padding: 16px 20px;
-      border: none;
-      border-radius: 10px;
-      background: #fff;
-      color: #050816;
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      cursor: pointer;
-    }
-
-    /* SHIMMER */
-    #installButton::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -120%;
-      width: 65%;
-      height: 100%;
-      background: linear-gradient(
-        110deg,
-        transparent,
-        rgba(200,200,200,0.95),
-        transparent
-      );
-      transform: skewX(-25deg);
-      animation: shimmer 2s infinite;
+    #installScreen.hidden {
+      opacity: 0;
+      visibility: hidden;
       pointer-events: none;
     }
 
-    @keyframes shimmer {
-      0% {
-        left: -120%;
-      }
-      45%, 100% {
-        left: 150%;
-      }
-    }
-
-    #installButton:active {
-      transform: scale(0.97);
-    }
-
-    #installHelp {
-      display: none;
-      max-width: 300px;
-      margin-top: 20px;
-      color: #d5d8e0;
-      font-size: 12px;
-      line-height: 1.7;
-    }
-
-    #continueButton {
-      display: none;
-      margin-top: 20px;
-      padding: 10px;
-      background: transparent;
-      border: none;
-      color: #aeb5c5;
-      font-size: 12px;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-
-    /* INTERNET MESSAGE */
-    #networkStatus {
-      position: fixed;
-      top: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10001;
-      background: #c62828;
-      color: #fff;
-      padding: 12px 18px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: bold;
-      display: none;
-      white-space: nowrap;
-    }
-
-    /* TOAST */
-    #toast {
-      position: fixed;
-      bottom: 35px;
-      left: 50%;
-      transform: translate(-50%, 20px);
-      z-index: 10002;
-      background: #292929;
-      color: #fff;
-      padding: 13px 22px;
+    .app-logo {
+      width: 112px;
+      height: 112px;
+      object-fit: contain;
       border-radius: 25px;
-      font-size: 13px;
-      opacity: 0;
-      visibility: hidden;
-      transition: .25s ease;
-      white-space: nowrap;
+      margin-bottom: 22px;
+      box-shadow: 0 0 35px rgba(80, 130, 255, .2);
     }
 
-    #toast.show {
-      opacity: 1;
-      visibility: visible;
-      transform: translate(-50%, 0);
+    .app-title {
+      font-size: 29px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .app-subtitle {
+      color: #b8c1d9;
+      font-size: 14px;
+      line-height: 1.7;
+      max-width: 300px;
+      margin-bottom: 30px;
+    }
+
+    #installButton {
+      width: 100%;
+      max-width: 290px;
+      padding: 16px 20px;
+      border: 0;
+      border-radius: 12px;
+      color: #fff;
+      background: linear-gradient(100deg, #246bff, #713cff);
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      animation: glow 2s infinite;
+    }
+
+    #installButton::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.35),
+        transparent
+      );
+      animation: shine 2s infinite;
+    }
+
+    @keyframes shine {
+      100% { left: 140%; }
+    }
+
+    @keyframes glow {
+      0%, 100% {
+        box-shadow: 0 0 10px rgba(65,110,255,.2);
+      }
+      50% {
+        box-shadow: 0 0 25px rgba(65,110,255,.6);
+      }
+    }
+
+    #statusMessage {
+      color: #aeb9d5;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-top: 18px;
+      max-width: 290px;
+    }
+
+    .brand-footer {
+      position: absolute;
+      bottom: 25px;
+      color: #65708c;
+      font-size: 11px;
+      letter-spacing: 1px;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- INSTALL PAGE -->
-  <div id="installPage">
-    <div id="installContent">
-
-      <img
-        id="installLogo"
-        src="./icons/icon-512.png"
-        alt="Dully Story App"
-      >
-
-      <h2 id="installTitle">
-        PAKUA DULLY STORY APP
-      </h2>
-
-      <p id="installDescription">
-        Furahia kusoma simulizi zako uzipendazo
-        kupitia Dully Story App.
-      </p>
-
-      <button id="installButton">
-        INSTALL APP
-      </button>
-
-      <div id="installHelp">
-        Ili kusakinisha app, fungua menyu ya Chrome
-        kupitia alama ya nukta tatu (⋮), kisha chagua
-        <b>Install app</b> au <b>Add to Home screen</b>
-        ikiwa chaguo hilo linapatikana.
-      </div>
-
-      <button id="continueButton">
-        Endelea bila kusakinisha
-      </button>
-
-    </div>
-  </div>
-
-  <!-- BLOGGER -->
+  <!-- Blogger website -->
   <iframe
     id="blog"
     src="https://dullystoryapp.blogspot.com/"
-    title="Dully Story App">
+    title="Dully Story App"
+    allow="fullscreen"
+    loading="eager">
   </iframe>
 
-  <!-- INTERNET STATUS -->
-  <div id="networkStatus">
-    No Internet Connection
+  <!-- App installation screen -->
+  <div id="installScreen">
+
+    <img
+      class="app-logo"
+      src="/dully-story-app-pwa/icons/icon-512.png"
+      alt="Dully Story App Logo">
+
+    <div class="app-title">DULLY STORY APP</div>
+
+    <p class="app-subtitle">
+      Karibu kwenye ulimwengu wa simulizi.
+      Soma hadithi mbalimbali na furahia
+      makala kupitia Dully Story App.
+    </p>
+
+    <button id="installButton">
+      PAKUA DULLY STORY APP
+    </button>
+
+    <p id="statusMessage">
+      Bonyeza kitufe hapo juu ili kusakinisha app.
+    </p>
+
+    <div class="brand-footer">
+      POWERED BY OFFICIAL DULLY
+    </div>
+
   </div>
 
-  <div id="toast"></div>
-
   <script>
-    /* REGISTER SERVICE WORKER */
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker
-          .register("./service-worker.js")
-          .catch(function (error) {
-            console.error("Service Worker:", error);
-          });
-      });
-    }
-
-    /* ELEMENTS */
-    const installPage =
-      document.getElementById("installPage");
+    let deferredPrompt = null;
 
     const installButton =
       document.getElementById("installButton");
 
-    const installHelp =
-      document.getElementById("installHelp");
+    const installScreen =
+      document.getElementById("installScreen");
 
-    const continueButton =
-      document.getElementById("continueButton");
+    const statusMessage =
+      document.getElementById("statusMessage");
 
-    /* TOAST */
-    const toast = document.getElementById("toast");
-    let toastTimer;
-
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add("show");
-
-      clearTimeout(toastTimer);
-
-      toastTimer = setTimeout(function () {
-        toast.classList.remove("show");
-      }, 2500);
-    }
-
-    /* OPEN BLOGGER */
-    function openBlogger() {
-      installPage.style.display = "none";
-    }
-
-    /* CHECK INSTALLED APP */
-    function checkInstalled() {
-      const standalone =
-        window.matchMedia(
-          "(display-mode: standalone)"
-        ).matches;
-
-      const androidApp =
-        window.navigator.standalone === true;
-
-      if (standalone || androidApp) {
-        openBlogger();
-        return true;
-      }
-
-      return false;
-    }
-
-    /* INSTALL PROMPT */
-    let deferredInstallPrompt = null;
-
-    window.addEventListener(
-      "beforeinstallprompt",
-      function (event) {
-        event.preventDefault();
-        deferredInstallPrompt = event;
-        installHelp.style.display = "none";
-      }
-    );
-
-    /* INSTALL BUTTON */
-    installButton.addEventListener(
-      "click",
-      async function () {
-        if (deferredInstallPrompt) {
-          const promptEvent = deferredInstallPrompt;
-          deferredInstallPrompt = null;
-
-          await promptEvent.prompt();
-
-          const result = await promptEvent.userChoice;
-
-          if (result.outcome === "accepted") {
-            showToast("Installation Started");
-          } else {
-            showToast("Installation Cancelled");
-          }
-
-        } else {
-          installHelp.style.display = "block";
-          continueButton.style.display = "block";
+    // Register service worker
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", async () => {
+        try {
+          await navigator.serviceWorker.register(
+            "/dully-story-app-pwa/service-worker.js",
+            { scope: "/dully-story-app-pwa/" }
+          );
+          console.log("Dully Story service worker registered");
+        } catch (error) {
+          console.error("Service worker error:", error);
         }
-      }
-    );
-
-    /* APP INSTALLED */
-    window.addEventListener(
-      "appinstalled",
-      function () {
-        openBlogger();
-        deferredInstallPrompt = null;
-        showToast("Dully Story App Installed!");
-      }
-    );
-
-    /* CONTINUE WITHOUT INSTALL */
-    continueButton.addEventListener(
-      "click",
-      function () {
-        openBlogger();
-      }
-    );
-
-    /* INITIAL CHECK */
-    checkInstalled();
-
-    /* INTERNET STATUS */
-    const networkStatus =
-      document.getElementById("networkStatus");
-
-    function checkInternet() {
-      networkStatus.style.display =
-        navigator.onLine ? "none" : "block";
+      });
     }
 
-    window.addEventListener("offline", function () {
-      networkStatus.style.display = "block";
+    // Receive Chrome installation event
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+
+      installButton.textContent =
+        "PAKUA DULLY STORY APP";
+
+      statusMessage.textContent =
+        "App iko tayari kusakinishwa kwenye simu yako.";
     });
 
-    window.addEventListener("online", function () {
-      networkStatus.style.display = "none";
-      showToast("Internet Connection Restored");
-    });
+    // Install button
+    installButton.addEventListener("click", async () => {
 
-    checkInternet();
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
 
-    /* BACK BUTTON */
-    let lastBackPress = 0;
+        const choice = await deferredPrompt.userChoice;
 
-    history.pushState(
-      { exitGuard: true },
-      "",
-      location.href
-    );
+        if (choice.outcome === "accepted") {
+          statusMessage.textContent =
+            "Asante! Umeanza kusakinisha Dully Story App.";
+        } else {
+          statusMessage.textContent =
+            "Usakinishaji haujakamilika. Unaweza kujaribu tena.";
+        }
 
-    window.addEventListener("popstate", function () {
-      const now = Date.now();
-
-      if (now - lastBackPress < 2000) {
-        lastBackPress = 0;
-        history.back();
-      } else {
-        lastBackPress = now;
-        showToast("Tap again to exit");
-
-        history.pushState(
-          { exitGuard: true },
-          "",
-          location.href
-        );
+        deferredPrompt = null;
+        return;
       }
+
+      statusMessage.textContent =
+        "Ikiwa Chrome inaonyesha chaguo la Install app au Add to Home screen, litumie kusakinisha app.";
     });
+
+    // Hide installer after successful installation
+    window.addEventListener("appinstalled", () => {
+      installScreen.classList.add("hidden");
+    });
+
+    // If already opened as an installed app, hide installer
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true;
+
+    if (isStandalone) {
+      installScreen.classList.add("hidden");
+    }
   </script>
 
 </body>
