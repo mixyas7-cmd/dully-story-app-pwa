@@ -1,10 +1,10 @@
 {
-  "id": "/story-za-dully-pwa/",
-  "name": "Story Za Dully",
-  "short_name": "Story Za Dully",
-  "description": "Soma simulizi mbalimbali za kusisimua kwa Kiswahili kupitia Story Za Dully.",
-  "start_url": "/story-za-dully-pwa/",
-  "scope": "/story-za-dully-pwa/",
+  "id": "/dully-story-app-pwa/",
+  "name": "Dully Story App",
+  "short_name": "Dully Story",
+  "description": "Karibu kwenye Dully Story App. Soma simulizi zako uzipendazo.",
+  "start_url": "/dully-story-app-pwa/",
+  "scope": "/dully-story-app-pwa/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#050816",
@@ -12,14 +12,14 @@
   "lang": "sw",
   "icons": [
     {
-      "src": "icons/icon-512.png",
-      "sizes": "512x512",
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-192.png",
-      "sizes": "192x192",
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     }
