@@ -6,16 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#050816">
 
-  <title>Story Za Dully</title>
+  <title>Dully Story App</title>
 
   <link rel="manifest" href="./manifest.json">
-
-  <link rel="icon" type="image/png"
-        sizes="512x512"
+  <link rel="icon" type="image/png" sizes="512x512"
         href="./icons/icon-512.png">
-
-  <link rel="apple-touch-icon"
-        href="./icons/icon-512.png">
+  <link rel="apple-touch-icon" href="./icons/icon-512.png">
 
   <style>
     * {
@@ -32,13 +28,13 @@
       font-family: Arial, sans-serif;
     }
 
-    /* BLOGGER */
+    /* BLOGGER IFRAME */
     #blog {
       width: 100%;
       height: 100%;
       height: 100dvh;
-      border: none;
       display: block;
+      border: none;
       background: #050816;
     }
 
@@ -61,23 +57,22 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
     }
 
     #installLogo {
-      width: 105px;
-      height: 105px;
+      width: 110px;
+      height: 110px;
       object-fit: cover;
-      border-radius: 23px;
+      border-radius: 24px;
       border: 1px solid rgba(255,255,255,0.25);
       margin-bottom: 28px;
     }
 
     #installTitle {
-      color: #ffffff;
+      color: #fff;
       font-size: 19px;
       font-weight: bold;
-      letter-spacing: 1.2px;
+      letter-spacing: 1px;
       margin: 0 0 10px;
     }
 
@@ -85,7 +80,7 @@
       color: #b8bdca;
       font-size: 13px;
       line-height: 1.6;
-      margin: 0 0 27px;
+      margin: 0 0 28px;
       max-width: 290px;
     }
 
@@ -98,16 +93,15 @@
       padding: 16px 20px;
       border: none;
       border-radius: 10px;
-      background: #ffffff;
+      background: #fff;
       color: #050816;
       font-size: 15px;
       font-weight: 800;
       letter-spacing: 1.5px;
       cursor: pointer;
-      box-shadow: 0 5px 22px rgba(255,255,255,0.10);
     }
 
-    /* SHIMMER EFFECT */
+    /* SHIMMER */
     #installButton::before {
       content: "";
       position: absolute;
@@ -118,7 +112,7 @@
       background: linear-gradient(
         110deg,
         transparent,
-        rgba(255,255,255,0.95),
+        rgba(200,200,200,0.95),
         transparent
       );
       transform: skewX(-25deg);
@@ -130,7 +124,6 @@
       0% {
         left: -120%;
       }
-
       45%, 100% {
         left: 150%;
       }
@@ -142,11 +135,11 @@
 
     #installHelp {
       display: none;
+      max-width: 300px;
+      margin-top: 20px;
       color: #d5d8e0;
       font-size: 12px;
       line-height: 1.7;
-      margin-top: 20px;
-      max-width: 300px;
     }
 
     #continueButton {
@@ -161,7 +154,7 @@
       cursor: pointer;
     }
 
-    /* NETWORK MESSAGE */
+    /* INTERNET MESSAGE */
     #networkStatus {
       position: fixed;
       top: 12px;
@@ -169,7 +162,7 @@
       transform: translateX(-50%);
       z-index: 10001;
       background: #c62828;
-      color: white;
+      color: #fff;
       padding: 12px 18px;
       border-radius: 8px;
       font-size: 13px;
@@ -186,7 +179,7 @@
       transform: translate(-50%, 20px);
       z-index: 10002;
       background: #292929;
-      color: white;
+      color: #fff;
       padding: 13px 22px;
       border-radius: 25px;
       font-size: 13px;
@@ -208,22 +201,21 @@
 
   <!-- INSTALL PAGE -->
   <div id="installPage">
-
     <div id="installContent">
 
       <img
         id="installLogo"
         src="./icons/icon-512.png"
-        alt="Story Za Dully"
+        alt="Dully Story App"
       >
 
       <h2 id="installTitle">
-        PAKUA STORY ZA DULLY APP
+        PAKUA DULLY STORY APP
       </h2>
 
       <p id="installDescription">
         Furahia kusoma simulizi zako uzipendazo
-        kupitia Story Za Dully App.
+        kupitia Dully Story App.
       </p>
 
       <button id="installButton">
@@ -247,21 +239,19 @@
   <!-- BLOGGER -->
   <iframe
     id="blog"
-    src="https://dullystory.blogspot.com/"
-    title="Story Za Dully">
+    src="https://dullystoryapp.blogspot.com/"
+    title="Dully Story App">
   </iframe>
 
-  <!-- NETWORK -->
+  <!-- INTERNET STATUS -->
   <div id="networkStatus">
     No Internet Connection
   </div>
 
   <div id="toast"></div>
 
-
   <script>
-
-    /* SERVICE WORKER */
+    /* REGISTER SERVICE WORKER */
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
         navigator.serviceWorker
@@ -271,7 +261,6 @@
           });
       });
     }
-
 
     /* ELEMENTS */
     const installPage =
@@ -286,14 +275,27 @@
     const continueButton =
       document.getElementById("continueButton");
 
+    /* TOAST */
+    const toast = document.getElementById("toast");
+    let toastTimer;
 
-    /* HIDE INSTALL PAGE */
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(toastTimer);
+
+      toastTimer = setTimeout(function () {
+        toast.classList.remove("show");
+      }, 2500);
+    }
+
+    /* OPEN BLOGGER */
     function openBlogger() {
       installPage.style.display = "none";
     }
 
-
-    /* CHECK IF APP IS ALREADY INSTALLED */
+    /* CHECK INSTALLED APP */
     function checkInstalled() {
       const standalone =
         window.matchMedia(
@@ -311,140 +313,83 @@
       return false;
     }
 
-
     /* INSTALL PROMPT */
     let deferredInstallPrompt = null;
 
     window.addEventListener(
       "beforeinstallprompt",
       function (event) {
-
         event.preventDefault();
-
         deferredInstallPrompt = event;
-
         installHelp.style.display = "none";
       }
     );
 
-
-    /* INSTALL BUTTON CLICK */
+    /* INSTALL BUTTON */
     installButton.addEventListener(
       "click",
       async function () {
-
         if (deferredInstallPrompt) {
-
-          deferredInstallPrompt.prompt();
-
-          const result =
-            await deferredInstallPrompt.userChoice;
-
+          const promptEvent = deferredInstallPrompt;
           deferredInstallPrompt = null;
 
+          await promptEvent.prompt();
+
+          const result = await promptEvent.userChoice;
+
           if (result.outcome === "accepted") {
-
             showToast("Installation Started");
-
-            openBlogger();
-
           } else {
-
             showToast("Installation Cancelled");
-
           }
 
         } else {
-
           installHelp.style.display = "block";
-
           continueButton.style.display = "block";
-
         }
-
       }
     );
-
 
     /* APP INSTALLED */
     window.addEventListener(
       "appinstalled",
       function () {
-
         openBlogger();
-
         deferredInstallPrompt = null;
-
-        showToast("Story Za Dully Installed!");
-
+        showToast("Dully Story App Installed!");
       }
     );
 
-
-    /* CONTINUE WITHOUT INSTALLING */
+    /* CONTINUE WITHOUT INSTALL */
     continueButton.addEventListener(
       "click",
       function () {
-
         openBlogger();
-
       }
     );
 
-
     /* INITIAL CHECK */
     checkInstalled();
-
-
-    /* TOAST MESSAGE */
-    const toast = document.getElementById("toast");
-
-    let toastTimer;
-
-    function showToast(message) {
-
-      toast.textContent = message;
-
-      toast.classList.add("show");
-
-      clearTimeout(toastTimer);
-
-      toastTimer = setTimeout(function () {
-
-        toast.classList.remove("show");
-
-      }, 2500);
-
-    }
-
 
     /* INTERNET STATUS */
     const networkStatus =
       document.getElementById("networkStatus");
 
     function checkInternet() {
-
       networkStatus.style.display =
         navigator.onLine ? "none" : "block";
-
     }
 
     window.addEventListener("offline", function () {
-
       networkStatus.style.display = "block";
-
     });
 
     window.addEventListener("online", function () {
-
       networkStatus.style.display = "none";
-
       showToast("Internet Connection Restored");
-
     });
 
     checkInternet();
-
 
     /* BACK BUTTON */
     let lastBackPress = 0;
@@ -456,19 +401,13 @@
     );
 
     window.addEventListener("popstate", function () {
-
       const now = Date.now();
 
       if (now - lastBackPress < 2000) {
-
         lastBackPress = 0;
-
         history.back();
-
       } else {
-
         lastBackPress = now;
-
         showToast("Tap again to exit");
 
         history.pushState(
@@ -476,11 +415,8 @@
           "",
           location.href
         );
-
       }
-
     });
-
   </script>
 
 </body>
