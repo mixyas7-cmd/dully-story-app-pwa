@@ -1,8 +1,9 @@
+
 {
   "id": "/dully-story-app-pwa/",
   "name": "Dully Story App",
   "short_name": "Dully Story",
-  "description": "Karibu kwenye Dully Story App. Soma simulizi zako uzipendazo.",
+  "description": "Soma simulizi na hadithi mbalimbali kupitia Dully Story App.",
   "start_url": "/dully-story-app-pwa/",
   "scope": "/dully-story-app-pwa/",
   "display": "standalone",
@@ -12,13 +13,13 @@
   "lang": "sw",
   "icons": [
     {
-      "src": "icons/icon-192.png",
+      "src": "/dully-story-app-pwa/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "/dully-story-app-pwa/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
