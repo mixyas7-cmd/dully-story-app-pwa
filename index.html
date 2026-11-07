@@ -1,0 +1,487 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050816">
+
+  <title>Story Za Dully</title>
+
+  <link rel="manifest" href="./manifest.json">
+
+  <link rel="icon" type="image/png"
+        sizes="512x512"
+        href="./icons/icon-512.png">
+
+  <link rel="apple-touch-icon"
+        href="./icons/icon-512.png">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #050816;
+      font-family: Arial, sans-serif;
+    }
+
+    /* BLOGGER */
+    #blog {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      border: none;
+      display: block;
+      background: #050816;
+    }
+
+    /* INSTALL PAGE */
+    #installPage {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #050816;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 25px;
+      text-align: center;
+    }
+
+    #installContent {
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #installLogo {
+      width: 105px;
+      height: 105px;
+      object-fit: cover;
+      border-radius: 23px;
+      border: 1px solid rgba(255,255,255,0.25);
+      margin-bottom: 28px;
+    }
+
+    #installTitle {
+      color: #ffffff;
+      font-size: 19px;
+      font-weight: bold;
+      letter-spacing: 1.2px;
+      margin: 0 0 10px;
+    }
+
+    #installDescription {
+      color: #b8bdca;
+      font-size: 13px;
+      line-height: 1.6;
+      margin: 0 0 27px;
+      max-width: 290px;
+    }
+
+    /* INSTALL BUTTON */
+    #installButton {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      max-width: 280px;
+      padding: 16px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #050816;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      box-shadow: 0 5px 22px rgba(255,255,255,0.10);
+    }
+
+    /* SHIMMER EFFECT */
+    #installButton::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 65%;
+      height: 100%;
+      background: linear-gradient(
+        110deg,
+        transparent,
+        rgba(255,255,255,0.95),
+        transparent
+      );
+      transform: skewX(-25deg);
+      animation: shimmer 2s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shimmer {
+      0% {
+        left: -120%;
+      }
+
+      45%, 100% {
+        left: 150%;
+      }
+    }
+
+    #installButton:active {
+      transform: scale(0.97);
+    }
+
+    #installHelp {
+      display: none;
+      color: #d5d8e0;
+      font-size: 12px;
+      line-height: 1.7;
+      margin-top: 20px;
+      max-width: 300px;
+    }
+
+    #continueButton {
+      display: none;
+      margin-top: 20px;
+      padding: 10px;
+      background: transparent;
+      border: none;
+      color: #aeb5c5;
+      font-size: 12px;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* NETWORK MESSAGE */
+    #networkStatus {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10001;
+      background: #c62828;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: bold;
+      display: none;
+      white-space: nowrap;
+    }
+
+    /* TOAST */
+    #toast {
+      position: fixed;
+      bottom: 35px;
+      left: 50%;
+      transform: translate(-50%, 20px);
+      z-index: 10002;
+      background: #292929;
+      color: white;
+      padding: 13px 22px;
+      border-radius: 25px;
+      font-size: 13px;
+      opacity: 0;
+      visibility: hidden;
+      transition: .25s ease;
+      white-space: nowrap;
+    }
+
+    #toast.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, 0);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- INSTALL PAGE -->
+  <div id="installPage">
+
+    <div id="installContent">
+
+      <img
+        id="installLogo"
+        src="./icons/icon-512.png"
+        alt="Story Za Dully"
+      >
+
+      <h2 id="installTitle">
+        PAKUA STORY ZA DULLY APP
+      </h2>
+
+      <p id="installDescription">
+        Furahia kusoma simulizi zako uzipendazo
+        kupitia Story Za Dully App.
+      </p>
+
+      <button id="installButton">
+        INSTALL APP
+      </button>
+
+      <div id="installHelp">
+        Ili kusakinisha app, fungua menyu ya Chrome
+        kupitia alama ya nukta tatu (⋮), kisha chagua
+        <b>Install app</b> au <b>Add to Home screen</b>
+        ikiwa chaguo hilo linapatikana.
+      </div>
+
+      <button id="continueButton">
+        Endelea bila kusakinisha
+      </button>
+
+    </div>
+  </div>
+
+  <!-- BLOGGER -->
+  <iframe
+    id="blog"
+    src="https://dullystory.blogspot.com/"
+    title="Story Za Dully">
+  </iframe>
+
+  <!-- NETWORK -->
+  <div id="networkStatus">
+    No Internet Connection
+  </div>
+
+  <div id="toast"></div>
+
+
+  <script>
+
+    /* SERVICE WORKER */
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker
+          .register("./service-worker.js")
+          .catch(function (error) {
+            console.error("Service Worker:", error);
+          });
+      });
+    }
+
+
+    /* ELEMENTS */
+    const installPage =
+      document.getElementById("installPage");
+
+    const installButton =
+      document.getElementById("installButton");
+
+    const installHelp =
+      document.getElementById("installHelp");
+
+    const continueButton =
+      document.getElementById("continueButton");
+
+
+    /* HIDE INSTALL PAGE */
+    function openBlogger() {
+      installPage.style.display = "none";
+    }
+
+
+    /* CHECK IF APP IS ALREADY INSTALLED */
+    function checkInstalled() {
+      const standalone =
+        window.matchMedia(
+          "(display-mode: standalone)"
+        ).matches;
+
+      const androidApp =
+        window.navigator.standalone === true;
+
+      if (standalone || androidApp) {
+        openBlogger();
+        return true;
+      }
+
+      return false;
+    }
+
+
+    /* INSTALL PROMPT */
+    let deferredInstallPrompt = null;
+
+    window.addEventListener(
+      "beforeinstallprompt",
+      function (event) {
+
+        event.preventDefault();
+
+        deferredInstallPrompt = event;
+
+        installHelp.style.display = "none";
+      }
+    );
+
+
+    /* INSTALL BUTTON CLICK */
+    installButton.addEventListener(
+      "click",
+      async function () {
+
+        if (deferredInstallPrompt) {
+
+          deferredInstallPrompt.prompt();
+
+          const result =
+            await deferredInstallPrompt.userChoice;
+
+          deferredInstallPrompt = null;
+
+          if (result.outcome === "accepted") {
+
+            showToast("Installation Started");
+
+            openBlogger();
+
+          } else {
+
+            showToast("Installation Cancelled");
+
+          }
+
+        } else {
+
+          installHelp.style.display = "block";
+
+          continueButton.style.display = "block";
+
+        }
+
+      }
+    );
+
+
+    /* APP INSTALLED */
+    window.addEventListener(
+      "appinstalled",
+      function () {
+
+        openBlogger();
+
+        deferredInstallPrompt = null;
+
+        showToast("Story Za Dully Installed!");
+
+      }
+    );
+
+
+    /* CONTINUE WITHOUT INSTALLING */
+    continueButton.addEventListener(
+      "click",
+      function () {
+
+        openBlogger();
+
+      }
+    );
+
+
+    /* INITIAL CHECK */
+    checkInstalled();
+
+
+    /* TOAST MESSAGE */
+    const toast = document.getElementById("toast");
+
+    let toastTimer;
+
+    function showToast(message) {
+
+      toast.textContent = message;
+
+      toast.classList.add("show");
+
+      clearTimeout(toastTimer);
+
+      toastTimer = setTimeout(function () {
+
+        toast.classList.remove("show");
+
+      }, 2500);
+
+    }
+
+
+    /* INTERNET STATUS */
+    const networkStatus =
+      document.getElementById("networkStatus");
+
+    function checkInternet() {
+
+      networkStatus.style.display =
+        navigator.onLine ? "none" : "block";
+
+    }
+
+    window.addEventListener("offline", function () {
+
+      networkStatus.style.display = "block";
+
+    });
+
+    window.addEventListener("online", function () {
+
+      networkStatus.style.display = "none";
+
+      showToast("Internet Connection Restored");
+
+    });
+
+    checkInternet();
+
+
+    /* BACK BUTTON */
+    let lastBackPress = 0;
+
+    history.pushState(
+      { exitGuard: true },
+      "",
+      location.href
+    );
+
+    window.addEventListener("popstate", function () {
+
+      const now = Date.now();
+
+      if (now - lastBackPress < 2000) {
+
+        lastBackPress = 0;
+
+        history.back();
+
+      } else {
+
+        lastBackPress = now;
+
+        showToast("Tap again to exit");
+
+        history.pushState(
+          { exitGuard: true },
+          "",
+          location.href
+        );
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>
