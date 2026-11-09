@@ -1,4 +1,3 @@
-
 const CACHE_NAME = "dully-story-app-pwa-v3";
 const CACHE_PREFIX = "dully-story-app-pwa-";
 const BASE = "/dully-story-app-pwa/";
@@ -83,4 +82,4 @@ self.addEventListener("fetch", (event) => {
       })
   );
 });
-                                       
+        
